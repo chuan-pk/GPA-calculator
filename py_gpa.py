@@ -22,6 +22,33 @@ def print_subjects(subjects):
     for subject in subjects:
         print("{:8} {:40} {:8} {:8}".format(subject.term, subject.title, str(subject.credit), subject.grade))
 
+def grade_to_number(letter):
+    grades = {
+        "A": 4, "B+": 3.5, "B": 3, "C+": 2.5, "C": 2, "D+": 1.5, "D": 1, "F": 0,
+    }
+    return grades[letter]
+
+def calculate_GPA(subjects):
+    sumproduct = 0
+    sumcredit = 0
+    for subject in subjects:
+        sumcredit += subject.credit
+        sumproduct += subject.credit * grade_to_number(subject.grade)
+    return str(sumproduct / sumcredit)[:4]
+
+def filter_subjects(subjects, term):
+    this_term_subjects = []
+    for subject in subjects:
+        if subject.term == term:
+            this_term_subjects.append(subject)
+    return this_term_subjects
+
+def calculator_mode(subjects):
+    print("--- calculator mode ----")
+    term = str(input("Enter term: "))
+    GPA = calculate_GPA(filter_subjects(subjects, term))
+    return GPA
+
 while True:
     subjects = read_csv('grade.csv')
     print_subjects(subjects)
@@ -31,8 +58,8 @@ while True:
         # call function for CRUD and write file then start loop again
         break
     elif mode == "2":
-        print("calculator mode")
-        # call function for calculate grade
+        GPA = calculator_mode(subjects)
+        print("GPA: {}".format(GPA))
         break
     else:
         print("Error")
