@@ -64,6 +64,7 @@ def calculator_mode(subjects):
     return GPA
 
 def edit_mode(subjects):
+    print("--- edit mode ----")
     mode = str(input("1: edit, 2: add, 3: delete>> "))
     if mode == "1":
         print("edit")
@@ -72,6 +73,7 @@ def edit_mode(subjects):
         add_subject(subjects)
     elif mode == "3":
         print("delete")
+        delete_subject(subjects)
 
 def add_subject(subjects):
     valid_grades = ["A", "B+", "B", "C+", "C", "D+", "D", "F"]
@@ -93,12 +95,19 @@ def add_subject(subjects):
     subjects.append(subject)
     write_csv(FILENAME, subjects)
 
+def delete_subject(subjects):
+    index = int(input("subject id: "))
+    while  not(index in list(range(0, len(subjects)))):
+        print("invalid index, index should be: 0 to {}".format(len(subjects)-1))
+        index = int(input("subject id: "))
+    del subjects[index]
+    write_csv(FILENAME, subjects)
+    
 while True:
     subjects = read_csv(FILENAME)
     print_subjects(subjects)
     mode = input("1: for edit mode, 2: for GPA calculator mode>> ")
     if mode == "1":
-        print("Edit mode")
         # call function for CRUD and write file then start loop again
         edit_mode(subjects)
         break
