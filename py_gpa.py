@@ -68,6 +68,7 @@ def edit_mode(subjects):
     mode = str(input("1: edit, 2: add, 3: delete>> "))
     if mode == "1":
         print("edit")
+        edit_subject(subjects)
     elif mode == "2":
         print("add")    
         add_subject(subjects)
@@ -103,6 +104,39 @@ def delete_subject(subjects):
     del subjects[index]
     write_csv(FILENAME, subjects)
     
+def edit_subject(subjects):
+    index = int(input("subject id: "))
+    while  not(index in list(range(0, len(subjects)))):
+        print("invalid index, index should be: 0 to {}".format(len(subjects)-1))
+        index = int(input("subject id: "))
+    subject = subjects[index]
+    print("""old
+    term: {}
+    title: {}
+    credit: {}
+    grade: {}
+    """.format(subject.term, subject.title, subject.credit, subject.grade))
+    valid_grades = ["A", "B+", "B", "C+", "C", "D+", "D", "F"]
+    valid_credit = [1, 2, 3]
+    term = str(input("enter term: "))
+    subject_title = str(input("enter subject title: "))
+
+    credit = int(input("enter subject credit: "))
+    while not(credit in valid_credit):    
+        print("Invalid credit, credit should be {}".format(valid_credit))
+        credit = int(input("enter subject credit: "))
+
+    grade = str(input("enter subject grade: "))
+    while not(grade in valid_grades):
+        print("Invalid grade, grade should be {}".format(valid_grades))
+        grade = str(input("enter subject grade: "))
+
+    subject.term = term
+    subject.title = subject_title
+    subject.credit = credit
+    subject.grade = grade
+    write_csv(FILENAME, subjects)
+
 while True:
     subjects = read_csv(FILENAME)
     print_subjects(subjects)
@@ -110,11 +144,8 @@ while True:
     if mode == "1":
         # call function for CRUD and write file then start loop again
         edit_mode(subjects)
-        break
     elif mode == "2":
         GPA = calculator_mode(subjects)
         print("GPA: {}".format(GPA))
-        break
     else:
         print("Error")
-        break
